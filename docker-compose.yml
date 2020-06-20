@@ -8,3 +8,18 @@ services:
     volumes:
       - ./queue/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
       - ./queue/definitions.json:/etc/rabbitmq/definitions.json:ro
+  producer:
+    build: ./producer
+    command: python producer.py
+    depends_on:
+      - rabbitmq
+  consumer:
+    build: ./consumer
+    command: python consumer.py
+    depends_on:
+      - rabbitmq
+  reprocess:
+    build: ./reprocess
+    command: python reprocess.py
+    depends_on:
+      - rabbitmq
