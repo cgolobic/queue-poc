@@ -10,7 +10,6 @@ services:
       - ./queue/definitions.json:/etc/rabbitmq/definitions.json:ro
   producer:
     build: ./producer
-    command: python producer.py
     depends_on:
       - rabbitmq
   consumer:
