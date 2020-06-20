@@ -1,24 +1,43 @@
 version: '3'
 services:
+
   rabbitmq:
-    image: "rabbitmq:3.8.5-management"
+    build: ./queue
     ports:
-      - 5672:5672
-      - 15672:15672
+      - 5672:5672 # queue
+      - 15672:15672 # management ui
+      - 15692:15692 # metrics
     volumes:
       - ./queue/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
       - ./queue/definitions.json:/etc/rabbitmq/definitions.json:ro
+
   producer:
     build: ./producer
     depends_on:
       - rabbitmq
+
   consumer:
     build: ./consumer
     command: python consumer.py
     depends_on:
       - rabbitmq
+
   reprocess:
     build: ./reprocess
     command: python reprocess.py
     depends_on:
       - rabbitmq
+
+  prometheus:
+    image: "prom/prometheus"
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus:ro
+
+  grafana:
+    image: "grafana/grafana"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
