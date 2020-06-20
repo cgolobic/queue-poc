@@ -1,0 +1,10 @@
+version: '3'
+services:
+  rabbitmq:
+    image: "rabbitmq:3.8.5-management"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./queue/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+      - ./queue/definitions.json:/etc/rabbitmq/definitions.json:ro
