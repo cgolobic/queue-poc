@@ -28,6 +28,14 @@ services:
     depends_on:
       - rabbitmq
 
+  api:
+    build: ./api
+    command: flask run --host 0.0.0.0
+    ports:
+      - 5000:5000
+    environment:
+      - FLASK_APP=api.py
+
   prometheus:
     image: "prom/prometheus"
     ports:
